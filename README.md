@@ -22,12 +22,41 @@ This project uses historical sales data to predict future demand, allowing busin
 Current development focuses on the **MVP (Minimum Viable Product)** architecture:
 
 ```mermaid
-graph LR
-    A[Raw Sales Data] -->|Cleaning & EDA| B(Data Preprocessing)
-    B -->|Feature Engineering| C{ML Model Engine}
-    C -->|Training| D[XGBoost / Linear Reg]
-    D -->|Prediction| E[Demand Forecast]
-    E -->|Optimization| F[Restocking Plan]
+graph TD
+    %% --- STYLING (Professional Theme) ---
+    classDef data fill:#e3f2fd,stroke:#1565c0,stroke-width:2px,color:#0d47a1
+    classDef proc fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#e65100
+    classDef model fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px,color:#1b5e20
+    classDef action fill:#2d3436,stroke:#000,stroke-width:2px,color:#fff
+
+    %% --- DATA LAYER ---
+    subgraph Ingestion [📥 Data Ingestion Layer]
+        Raw[📄 Raw Sales Data]:::data
+        Stock[🏭 Inventory Levels]:::data
+        Cal[📅 Calendar/Holidays]:::data
+    end
+
+    Raw & Stock & Cal -->|Load & Merge| ETL(Cleaning & Preprocessing):::proc
+
+    %% --- ML PIPELINE ---
+    subgraph Engine [⚙️ The ML Engine]
+        ETL -->|Create Lags/Rolling Mean| Feat(Feature Engineering):::proc
+        Feat -->|Split Data| Train{Model Training}:::model
+        
+        Train -->|Baseline| LR[Linear Regression]:::model
+        Train -->|Advanced| XGB[XGBoost Regressor]:::model
+        
+        LR & XGB -->|Compare MAPE| Best[🏆 Select Best Model]:::model
+    end
+
+    %% --- BUSINESS VALUE ---
+    subgraph Output [🚀 Actionable Insights]
+        Best -->|Predict Next 7 Days| Forecast[📈 Demand Forecast]:::action
+        Forecast -->|Compare with Current Stock| Plan[📦 Optimized Restocking Plan]:::action
+    end
+
+    %% --- FEEDBACK LOOP (The 'Smart' Part) ---
+    Plan -.->|New Sales Data| Raw
 ```
 
 ## 🛠️ Tech Stack
