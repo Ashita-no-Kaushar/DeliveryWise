@@ -151,3 +151,10 @@ If you have suggestions for optimizing the ML pipeline, feel free to open an iss
 *Last Updated: Jan 2026*
 ---
 
+### 📜 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+
+
+**Built with ❤️ by Kaushar Halani**
